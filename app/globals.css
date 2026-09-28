@@ -1,26 +1,203 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --reality-font: 'Instrument Serif', Georgia, serif;
+  --font-main: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Space Mono', monospace;
+
+  /* Default Lab Light (Canonical Sutera) */
+  --bg-color: #fbfbfb;
+  --text-primary: #121212;
+  --text-muted: #737373;
+  --border-color: #121212;
+  --border-light: #e5e5e5;
+  --grid-line: #f0f0f0;
+  --card-bg: #ffffff;
+  --crosshair-color: #121212;
+  --accent-color: #000000;
+  --pill-bg: #ffffff;
+  --pill-text: #121212;
+  --tag-bg: #121212;
+  --tag-text: #ffffff;
+  --canvas-line: #222222;
+  --canvas-glow: rgba(0, 0, 0, 0.15);
+  --grid-margin: clamp(16px, 2.5vw, 36px);
+  --grid-gutter: clamp(12px, 2vw, 24px);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+[data-reality="horizon-dark"] {
+  --bg-color: #08090c;
+  --text-primary: #f3f4f6;
+  --text-muted: #94a3b8;
+  --border-color: rgba(0, 240, 255, 0.45);
+  --border-light: rgba(255, 255, 255, 0.1);
+  --grid-line: rgba(0, 240, 255, 0.07);
+  --card-bg: rgba(13, 17, 23, 0.85);
+  --crosshair-color: #00f0ff;
+  --accent-color: #00f0ff;
+  --pill-bg: rgba(13, 17, 23, 0.95);
+  --pill-text: #00f0ff;
+  --tag-bg: #00f0ff;
+  --tag-text: #08090c;
+  --canvas-line: #00f0ff;
+  --canvas-glow: rgba(0, 240, 255, 0.35);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+[data-reality="blueprint-cad"] {
+  --bg-color: #08172e;
+  --text-primary: #f0f9ff;
+  --text-muted: #7dd3fc;
+  --border-color: rgba(56, 189, 248, 0.55);
+  --border-light: rgba(56, 189, 248, 0.18);
+  --grid-line: rgba(56, 189, 248, 0.1);
+  --card-bg: rgba(8, 27, 54, 0.9);
+  --crosshair-color: #38bdf8;
+  --accent-color: #38bdf8;
+  --pill-bg: #08284e;
+  --pill-text: #38bdf8;
+  --tag-bg: #38bdf8;
+  --tag-text: #08172e;
+  --canvas-line: #38bdf8;
+  --canvas-glow: rgba(56, 189, 248, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  font-family: var(--font-main);
+  transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  font-family: var(--font-main);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom cursor hide default on fine pointers */
+@media (pointer: fine) {
+  body, a, button, [role="button"], input {
+    cursor: none !important;
+  }
+}
+
+/* Typography styles matching Sutera */
+.font-reality {
+  font-family: var(--reality-font);
+}
+
+.font-main {
+  font-family: var(--font-main);
+}
+
+.font-mono-tech {
+  font-family: var(--font-mono);
+}
+
+/* Selection style */
+::selection {
+  background-color: var(--accent-color);
+  color: var(--bg-color);
+}
+
+/* Technical Blueprint Clip Paths & Borders */
+.technical-border {
+  border: 1px solid var(--border-color);
+}
+
+.technical-border-light {
+  border: 1px solid var(--border-light);
+}
+
+.technical-polygon {
+  clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
+}
+
+.technical-chamfer {
+  clip-path: polygon(
+    0 10px,
+    10px 0,
+    100% 0,
+    100% calc(100% - 10px),
+    calc(100% - 10px) 100%,
+    0 100%
+  );
+}
+
+/* Marquee Animation */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Crosshair Node Mark */
+.crosshair-node {
+  position: relative;
+  width: 21px;
+  height: 21px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-color);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.crosshair-node::before {
+  content: '';
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  background-color: var(--accent-color);
+}
+
+/* Technical pulse */
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.9); }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Smooth Scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 0px;
+}
+
+/* Grid background guide overlay */
+.sutera-grid-bg {
+  background-size: 100% 100%;
+  pointer-events: none;
 }
